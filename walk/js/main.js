@@ -3,7 +3,7 @@
 // when you do: one minute per tile walked, plus time spent in conversations.
 import { state, advance, NOON, MIN_PER_TILE, TILE } from './state.js';
 import { MAPS, thingAt, findPath, npcPresent } from './maps.js';
-import { drawWorld, drawPetals } from './render.js';
+import { drawWorld, drawPetals, loadArt, artTop, signAt } from './render.js';
 import { openScript, openSign } from './talk.js';
 import { updateHud, toast, overlayOpen, openNotebook, closeNotebook, fadeThrough, showSummary } from './hud.js';
 
@@ -19,6 +19,7 @@ let pending = null;     // a tap made mid-step; planned when the step lands
 let marker = null;
 let walkPhase = 0;
 let t = 0;
+let lastDt = 0;
 const wasPresent = {};
 
 const cyclists = [
@@ -56,11 +57,13 @@ function resize() {
 function updateCamera(snap) {
   const m = map(), p = state.player;
   const talking = !document.getElementById('talk').classList.contains('hidden');
-  const fit = (center, view, size) => size <= view ? (size - view) / 2
-    : Math.max(0, Math.min(size - view, center - view / 2));
+  const fit = (center, view, size, origin = 0) => origin + (size <= view ? (size - view) / 2
+    : Math.max(0, Math.min(size - view, center - origin - view / 2)));
+  // The art reaches `top` tiles above row 0 (roofs, the station gable).
+  const top = artTop(m.id) * TILE;
   // While the talk card covers the bottom of the screen, keep the player in the top part.
   const tx = fit(p.fx * TILE + TILE / 2, vw, m.w * TILE);
-  const ty = fit(p.fy * TILE + TILE / 2 + (talking ? vh * 0.22 : 0), vh, m.h * TILE);
+  const ty = fit(p.fy * TILE + TILE / 2 + (talking ? vh * 0.22 : 0), vh, m.h * TILE + top, -top);
   if (snap) { camX = tx; camY = ty; return; }
   camX += (tx - camX) * 0.15;
   camY += (ty - camY) * 0.15;
@@ -102,9 +105,10 @@ function onTap(e) {
   if (overlayOpen() || state.ended) return;
   const wx = e.clientX / scale + camX, wy = e.clientY / scale + camY;
   const x = Math.floor(wx / TILE), y = Math.floor(wy / TILE);
-  if (x < 0 || y < 0 || x >= map().w || y >= map().h) return;
+  if (x < 0 || x >= map().w || y >= map().h) return;
   marker = { x, y, age: 0 };
-  const target = findTarget(x, y);
+  const target = signAt(map(), wx, wy) || findTarget(x, y);
+  if (!target && y < 0) return;
   if (target) plan(goalFor(target), target);
   else plan((gx, gy) => gx === x && gy === y, null);
 }
@@ -209,6 +213,7 @@ function watchSchedules() {
 
 function update(dt) {
   t += dt;
+  lastDt = dt;
   step(dt);
   watchSchedules();
   if (marker) { marker.age += dt; if (marker.age > 0.6) marker = null; }
@@ -235,9 +240,8 @@ function render() {
   const k = dpr * scale;
   ctx.setTransform(k, 0, 0, k, -camX * k, -camY * k);
   ctx.imageSmoothingEnabled = true;
-  const bob = path.length ? Math.abs(Math.sin(walkPhase)) * 2 : 0;
   drawWorld(ctx, { camX, camY, vw, vh }, m, state, {
-    t, bob, marker, cyclists: m.id === 'town' ? cyclists : [],
+    t, dt: lastDt, walking: path.length > 0, walkPhase, marker, cyclists: m.id === 'town' ? cyclists : [],
   });
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (m.outdoors) drawPetals(ctx, petals);
@@ -257,10 +261,19 @@ window.addEventListener('resize', resize);
 canvas.addEventListener('pointerdown', onTap);
 document.getElementById('notebook-btn').addEventListener('click', openNotebook);
 document.getElementById('notebook-close').addEventListener('click', closeNotebook);
-document.getElementById('start').addEventListener('click', () => document.getElementById('intro').classList.add('hidden'));
+const start = document.getElementById('start');
+start.addEventListener('click', () => document.getElementById('intro').classList.add('hidden'));
 document.getElementById('again').addEventListener('click', () => location.reload());
 
-resize();
-updateHud();
+start.disabled = true;
+start.textContent = 'Loading Kunitachi…';
 const fontsReady = document.fonts ? document.fonts.load('700 12px "Noto Sans JP"') : Promise.resolve();
-Promise.race([fontsReady, new Promise(r => setTimeout(r, 1500))]).finally(() => requestAnimationFrame(frame));
+Promise.all([loadArt(['town', 'apartment']), Promise.race([fontsReady, new Promise(r => setTimeout(r, 1500))])])
+  .then(() => {
+    start.disabled = false;
+    start.textContent = 'Begin';
+    resize();
+    updateHud();
+    requestAnimationFrame(frame);
+  })
+  .catch(err => { start.textContent = 'Could not load the art — try reloading'; console.error(err); });

@@ -63,7 +63,7 @@ function buildTown() {
   // West side, north of Sakura-dōri: a house, the bakery, the park
   add({ kind: 'building', style: 'house', x: 1, y: 13, w: 4, h: 5 });
   add({ kind: 'building', style: 'bakery', x: 6, y: 13, w: 6, h: 5 });
-  add({ kind: 'sign', style: 'shop', x: 11, y: 15, text: '{pan}' });
+  add({ kind: 'sign', style: 'shop', x: 8, y: 17, text: '{pan}' });
 
   fill(g, 0, 21, 12, 1, 'h');
   fill(g, 0, 32, 12, 1, 'h');
@@ -89,22 +89,37 @@ function buildTown() {
   // South-west: konbini and houses
   add({ kind: 'building', style: 'house', x: 1, y: 42, w: 4, h: 5 });
   add({ kind: 'building', style: 'konbini', x: 6, y: 42, w: 6, h: 5 });
-  add({ kind: 'sign', style: 'konbini', x: 11, y: 44, text: '{konbini}' });
+  add({ kind: 'sign', style: 'konbini', x: 8, y: 46, text: '{konbini}' });
   add({ kind: 'building', style: 'house2', x: 1, y: 49, w: 4, h: 5 });
   add({ kind: 'building', style: 'house', x: 6, y: 49, w: 6, h: 5 });
   add({ kind: 'building', style: 'house2', x: 1, y: 55, w: 10, h: 4 });
 
   // South-east: your apartment on a quiet lane
   fill(g, 28, 47, 12, 2, 'l');
-  add({ kind: 'building', style: 'apartment', x: 30, y: 43, w: 7, h: 4 });
+  add({ kind: 'building', style: 'apartment', x: 30, y: 44, w: 7, h: 3 });
   add({ kind: 'door', x: 31, y: 46, to: 'apartment', tx: 2, ty: 7, dir: 'up' });
   add({ kind: 'sign', style: 'shop', x: 34, y: 46, text: '{haitsu}{kunitachi}' });
   add({ kind: 'gomi', x: 37, y: 46 });
   add({ kind: 'sign', style: 'gomi', x: 38, y: 46, text: '{moeru}{gomi}', extra: '月・木' });
   add({ kind: 'decal', block: false, x: 29, y: 47, w: 1, h: 2, text: '{tomare}' });
-  add({ kind: 'building', style: 'house2', x: 28, y: 49, w: 4, h: 5 });
-  add({ kind: 'building', style: 'house', x: 33, y: 49, w: 5, h: 5 });
-  add({ kind: 'building', style: 'house2', x: 28, y: 55, w: 11, h: 4 });
+  // Little vegetable plots between the lane and the houses — Kunitachi still has them.
+  add({ kind: 'field', x: 28, y: 49, w: 5, h: 2 });
+  add({ kind: 'field', x: 34, y: 49, w: 5, h: 2 });
+  add({ kind: 'building', style: 'house2', x: 28, y: 51, w: 5, h: 5 });
+  add({ kind: 'building', style: 'house', x: 34, y: 51, w: 5, h: 5 });
+  add({ kind: 'building', style: 'house2', x: 28, y: 57, w: 11, h: 3 });
+
+  // Street furniture: utility poles, lamps, parked bikes, post box, plants
+  const decor = (type, x, y) => add({ kind: 'decor', type, x, y });
+  for (const y of [16, 22, 28, 44, 50, 56]) { decor('lamp', 14, y); decor('lamp', 25, y); }
+  for (const x of [9, 10, 11]) decor('bike', x, 10);
+  decor('bike', 12, 46); decor('bike', 12, 47);
+  decor('postbox', 13, 10);
+  decor('plant', 7, 18); decor('plant', 10, 18); decor('plant', 2, 18);
+  const poles = [[2, 34], [8, 34], [29, 41], [35, 41], [39, 41], [33, 48], [39, 48]];
+  for (const [x, y] of poles) decor('pole', x, y);
+  // Power lines sag between poles; drawn above everyone.
+  const wires = [[[2, 34], [8, 34]], [[29, 41], [35, 41], [39, 41]], [[33, 48], [39, 48]]];
 
   const npcs = [
     // The old man feeds pigeons on the bench every morning until 10:30.
@@ -113,7 +128,7 @@ function buildTown() {
     { id: 'ono', x: 35, y: 47, from: 7 * 60, to: 8 * 60 + 30, script: 'ono' },
   ];
 
-  return { id: 'town', name: 'Kunitachi', w: W, h: H, ground: g, things, npcs, outdoors: true };
+  return { id: 'town', name: 'Kunitachi', w: W, h: H, ground: g, things, npcs, wires, outdoors: true };
 }
 
 function buildApartment() {
@@ -129,8 +144,12 @@ function buildApartment() {
   add({ kind: 'item', icon: 'phrasebook', x: 4, y: 3, use: 'talk', script: 'phrasebook' });
   add({ kind: 'item', icon: 'bible', x: 5, y: 4, use: 'talk', script: 'bible' });
   add({ kind: 'counter', x: 5, y: 7, w: 3, h: 1 });
+  // You arrived three days ago: still living out of a suitcase and boxes.
+  add({ kind: 'decor', type: 'suitcase', x: 7, y: 1 });
+  add({ kind: 'decor', type: 'boxes', x: 7, y: 2 });
+  add({ kind: 'decor', type: 'zabuton', block: false, x: 4, y: 5 });
   add({ kind: 'door', x: 2, y: 8, to: 'town', tx: 31, ty: 47, dir: 'down' });
-  return { id: 'apartment', name: 'Your apartment', w: W, h: H, ground: g, things, npcs: [], outdoors: false };
+  return { id: 'apartment', name: 'Your apartment', w: W, h: H, ground: g, things, npcs: [], wires: [], outdoors: false };
 }
 
 export const MAPS = { town: buildTown(), apartment: buildApartment() };
