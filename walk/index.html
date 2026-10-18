@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1b1b2b">
+  <title>One Morning — Kunitachi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Zen+Old+Mincho:wght@500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="walk.css">
+</head>
+<body>
+
+<canvas id="world"></canvas>
+
+<div id="hud">
+  <div class="hud-pill" id="clock">
+    <span class="hud-phase">朝</span>
+    <span id="clock-time">7:00</span><span id="clock-ampm" class="hud-ampm">AM</span>
+    <span class="hud-sep">·</span>
+    <span id="place">Your apartment</span>
+  </div>
+  <button id="notebook-btn" class="hud-pill" aria-label="Word notebook">📓 <span id="word-count">3</span></button>
+</div>
+
+<div id="toasts"></div>
+
+<div id="talk" class="hidden">
+  <div class="talk-card">
+    <div id="talk-head" class="talk-head">
+      <div id="talk-portrait" class="portrait"></div>
+      <div id="talk-name" class="talk-name"></div>
+    </div>
+    <div id="talk-body" class="talk-body"></div>
+    <div id="talk-choices" class="talk-choices"></div>
+  </div>
+</div>
+
+<div id="notebook" class="sheet hidden">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Notebook <span class="jp">ノート</span></div>
+        <div id="notebook-sub" class="sheet-sub"></div>
+      </div>
+      <button id="notebook-close" class="icon-btn" aria-label="Close">✕</button>
+    </div>
+    <ul id="notebook-list" class="notebook-list"></ul>
+  </div>
+</div>
+
+<div id="intro" class="overlay">
+  <div class="overlay-card">
+    <div class="eyebrow">Prototype · One Morning</div>
+    <div class="title-jp">国立</div>
+    <div class="title-en">Kunitachi, early April</div>
+    <p>You arrived three days ago. Your Japanese is a handful of words. The cherry trees on Daigaku-dōri are in full bloom.</p>
+    <p class="dim">Tap to walk. Tap people, signs and things to look closer. Time only moves when you do. The morning ends at noon.</p>
+    <button id="start" class="primary">Begin</button>
+  </div>
+</div>
+
+<div id="summary" class="overlay hidden">
+  <div class="overlay-card">
+    <div class="eyebrow">Noon</div>
+    <div class="title-en">Your first morning in Kunitachi</div>
+    <ul id="summary-people" class="summary-people"></ul>
+    <div class="summary-label">Words you picked up</div>
+    <div id="summary-words" class="summary-words"></div>
+    <button id="again" class="primary">Play the morning again</button>
+  </div>
+</div>
+
+<div id="fade"></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

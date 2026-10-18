@@ -108,6 +108,6 @@ Never auto-clear without confirmation. The point of triage is that Jacob sees ea
 
 ## Local testing
 
-Do NOT run playwright — it doesn't work in this environment. Push and let Jacob test on iPhone. See memory `feedback_no_playwright.md`.
+**Cloud sessions:** Playwright works (verified 2026-10-18). It's installed globally, so import it by path: `import { chromium, devices } from '<npm root -g>/playwright/index.mjs'`, serve the repo with `python3 -m http.server`, and screenshot with `devices['iPhone 13']`. Use it to check layout/flows before pushing — iPhone testing by Jacob is still the final word. (On Jacob's local machine, the older note in memory `feedback_no_playwright.md` may still apply.)
 
 The render loop in `js/ui.js` wraps each render in `safeRender(name, fn)` so a single throw doesn't kill the loop. If Jacob reports `[render:Foo]` errors in the console, that's safeRender catching them — read the file and find the underlying error.

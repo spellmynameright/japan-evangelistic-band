@@ -1,5 +1,15 @@
 # File map
 
+walk/                 — "One Morning" walking prototype (2026-10-18) — separate from the main game, served at /walk/
+walk/index.html       — prototype shell: canvas, HUD, talk card, notebook sheet, intro + noon summary
+walk/walk.css         — prototype styles (light card UI over the canvas)
+walk/js/main.js       — boot, render loop, tap-to-walk input, camera, pathing, interactions, NPC schedule watch
+walk/js/state.js      — prototype state (clock, known words, items, flags) + TILE/NOON/MIN_PER_TILE constants
+walk/js/maps.js       — town (Kunitachi sketch) + apartment maps, blocked(), findPath() BFS, npcPresent()
+walk/js/render.js     — placeholder art drawn in code (tiles, buildings, trees, people, signs, petals)
+walk/js/talk.js       — conversation/object scripts (node format documented at top), sign cards, word-locked choices
+walk/js/words.js      — vocabulary (WORDS), START_WORDS, "{id}" markup parse()/wordsIn()/plain()
+walk/js/hud.js        — clock/place HUD, toasts, notebook sheet, fade, noon summary
 ```
 ROADMAP.md            — design direction, locked decisions, multi-step roadmap (Steps 1–7)
 PROGRESS.md           — what's actually shipped, ideas backlog

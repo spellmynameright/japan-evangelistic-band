@@ -40,6 +40,7 @@ Status of what's shipped + ideas backlog. Architecture lives in `CLAUDE.md`. Des
 | Editorial day-beat header + dayBeats.json phrases (v36) | ✅ | ✅ 20 lines | ❌ not yet |
 | Cinematic travel overlay — ~5s train video on every trip (v37) | ✅ | ✅ 1 clip (travel.MP4) | ❌ not yet |
 | Go-home end-of-day gate — must travel home before the day ends (v37) | ✅ | ✅ | ❌ not yet |
+| **Walking prototype "One Morning" (`walk/`) — Kunitachi map, tap-to-walk, readable signs, word-locked choices, Hiro + neighbor schedules** | ✅ prototype | ⚠️ placeholder art | ❌ not yet |
 
 ---
 
