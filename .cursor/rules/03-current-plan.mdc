@@ -9,7 +9,7 @@ Update this rule and the **Current plan** section in `CLAUDE.md` whenever priori
 
 ## Now (active)
 
-1. **Local + GitHub workflow** — Develop in this folder; commit and push to `trimmja/japan-evangelistic-band` when the developer asks.
+1. **Local + GitHub workflow** — Develop in this folder; commit and push to `spellmynameright/japan-evangelistic-band` when the developer asks.
 2. **Shared AI context** — Keep `CLAUDE.md` and `.cursor/rules/` aligned so Cursor and Claude stay on the same page.
 3. **Phase 1 game** — Core loop is built (locations, actions, NPCs, milestones, save, PWA). Focus on polish, balance, and iPhone playability before large new systems.
 4. **Test on device** — Verify via GitHub Pages URL after pushes; use Add to Home Screen for standalone PWA feel.

@@ -43,10 +43,10 @@ When a change ships in a session, update the matching doc **in the same session,
 ## About me
 
 - Beginner — no coding experience. Prefer plain-language explanations.
-- I work in the local folder `jbe` (GitHub repo: `trimmja/japan-evangelistic-band`).
+- I work in the local folder `jbe` (GitHub repo: `spellmynameright/japan-evangelistic-band`).
 - I lean on Claude for everything — planning, design, code, commits.
 - Ask before pushing to GitHub unless I say to publish / push / save to GitHub.
-- **Hosting & testing:** GitHub Pages — https://trimmja.github.io/japan-evangelistic-band/ (not `claude-mobile`). Mostly test on **iPhone**. Push then refresh; stale PWA → Settings → **Load latest update** or reinstall Home Screen shortcut.
+- **Hosting & testing:** GitHub Pages — https://spellmynameright.github.io/japan-evangelistic-band/ (not `claude-mobile`). Mostly test on **iPhone**. Push then refresh; stale PWA → Settings → **Load latest update** or reinstall Home Screen shortcut.
 - Real missionary experience in Japan — keep the game culturally authentic.
 
 ---
@@ -76,7 +76,7 @@ Playable on iPhone via GitHub Pages (Add to Home Screen as a standalone app).
 
 ## Live game
 Deploy via: GitHub repo → Settings → Pages → branch `claude/environment-selection-iphone-EohwW` → root
-URL: `https://trimmja.github.io/japan-evangelistic-band/` (not `claude-mobile` — that URL 404s)
+URL: `https://spellmynameright.github.io/japan-evangelistic-band/` (not `claude-mobile` — that URL 404s)
 
 ## Tech stack
 - Pure HTML/CSS/Vanilla JS — no build step, no framework, no package.json

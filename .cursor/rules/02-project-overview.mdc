@@ -11,7 +11,7 @@ alwaysApply: true
 
 **Deploy:** GitHub → Settings → Pages → branch `claude/environment-selection-iphone-EohwW` → `/` (root)
 
-**Live URL:** https://trimmja.github.io/japan-evangelistic-band/
+**Live URL:** https://spellmynameright.github.io/japan-evangelistic-band/
 
 **Stack:** Pure HTML, CSS, vanilla JS — no build step, no framework, no `package.json`. ES modules, `localStorage` saves (`tokyo_called_v1`), Web Audio API, PWA (`manifest.json` + `sw.js`).
 

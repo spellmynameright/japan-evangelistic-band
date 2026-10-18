@@ -7,9 +7,9 @@ alwaysApply: true
 
 - **Experience:** Beginner — no prior coding background. Explain changes in plain language; avoid jargon or define it briefly.
 - **Workflow:** Edits happen in this folder (`jbe` / `japan-evangelistic-band` on GitHub). Push to GitHub only when explicitly asked (e.g. "push", "save to GitHub", "publish").
-- **Hosting & testing:** Game is hosted on **GitHub Pages**; primary testing is on **iPhone** (Add to Home Screen PWA). **Live URL:** https://trimmja.github.io/japan-evangelistic-band/ (not `claude-mobile`). Edits need **push** then refresh. If the phone shows an old build, use Settings → **Load latest update** (Build number in settings) or delete the Home Screen app and re-add from the correct URL.
+- **Hosting & testing:** Game is hosted on **GitHub Pages**; primary testing is on **iPhone** (Add to Home Screen PWA). **Live URL:** https://spellmynameright.github.io/japan-evangelistic-band/ (not `claude-mobile`). Edits need **push** then refresh. If the phone shows an old build, use Settings → **Load latest update** (Build number in settings) or delete the Home Screen app and re-add from the correct URL.
 - **AI tools:** Uses **Cursor** (implementation, git) and **Claude** (planning, design). Both should read `CLAUDE.md`; Cursor also loads `.cursor/rules/`.
-- **GitHub:** Account `trimmja`, repo `japan-evangelistic-band`. GitHub CLI is authenticated on this machine.
+- **GitHub:** Account `spellmynameright`, repo `japan-evangelistic-band`. GitHub CLI is authenticated on this machine.
 - **Domain knowledge:** Real missionary experience in Japan — authenticity in tone, mechanics, and cultural details matters.
 
 When teaching or proposing changes: small steps, say what file you touched and why. After JSON/balance edits, offer to push so they can test on the phone — that is their usual workflow.

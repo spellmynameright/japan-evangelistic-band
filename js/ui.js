@@ -926,7 +926,7 @@ export function showGoHomeModal(onGoHome) {
 export function bindSettings(onReset) {
   const versionEl = $('app-version');
   if (versionEl) {
-    versionEl.textContent = `Build ${APP_VERSION} · trimmja.github.io/japan-evangelistic-band`;
+    versionEl.textContent = `Build ${APP_VERSION} · spellmynameright.github.io/japan-evangelistic-band`;
   }
 
   $('refresh-app-btn')?.addEventListener('click', () => hardRefreshApp());
