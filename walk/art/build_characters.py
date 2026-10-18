@@ -125,10 +125,10 @@ def person(look, phase=0.0, walking=False, sit=False, arms=None, cap=False, bun=
     if sit:
         hip_z = 0.5
         for side in (-1, 1):
-            knee = (side * 0.1, -0.28, 0.5)
+            knee = (side * 0.11, -0.3, 0.48)
             limb('thigh', (side * 0.09, 0.0, hip_z), knee, 0.075, 0.07, L['legs'])
-            limb('shin', knee, (side * 0.1, -0.32, 0.08), 0.065, 0.06, L['legs'])
-            blob('shoe', (side * 0.1, -0.38, 0.05), 0.07, SHOE, scale=(1, 1.5, 0.7))
+            limb('shin', knee, (side * 0.11, -0.36, 0.1), 0.065, 0.06, L['legs'])
+            blob('shoe', (side * 0.11, -0.42, 0.06), 0.07, SHOE, scale=(1, 1.5, 0.7))
     else:
         for side, sw in ((-1, s), (1, -s)):
             foot = (side * 0.09, -0.16 * sw, 0.07 + max(0, sw) * 0.05)

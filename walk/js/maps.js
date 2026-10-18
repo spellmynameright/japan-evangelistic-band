@@ -144,6 +144,10 @@ function buildApartment() {
   add({ kind: 'item', icon: 'phrasebook', x: 4, y: 3, use: 'talk', script: 'phrasebook' });
   add({ kind: 'item', icon: 'bible', x: 5, y: 4, use: 'talk', script: 'bible' });
   add({ kind: 'counter', x: 5, y: 7, w: 3, h: 1 });
+  // You arrived three days ago: still living out of a suitcase and boxes.
+  add({ kind: 'decor', type: 'suitcase', x: 7, y: 1 });
+  add({ kind: 'decor', type: 'boxes', x: 7, y: 2 });
+  add({ kind: 'decor', type: 'zabuton', block: false, x: 4, y: 5 });
   add({ kind: 'door', x: 2, y: 8, to: 'town', tx: 31, ty: 47, dir: 'down' });
   return { id: 'apartment', name: 'Your apartment', w: W, h: H, ground: g, things, npcs: [], wires: [], outdoors: false };
 }

@@ -37,9 +37,9 @@ html, body {
   inset: 0;
   background:
     radial-gradient(120% 80% at 85% 0%, rgba(255, 214, 160, 0.20), transparent 60%),
-    radial-gradient(140% 100% at 50% 50%, transparent 55%, rgba(20, 16, 40, 0.28));
+    radial-gradient(150% 110% at 50% 50%, transparent 60%, rgba(20, 16, 40, 0.16));
 }
-.tilt { height: 18%; backdrop-filter: blur(2.2px); -webkit-backdrop-filter: blur(2.2px); }
+.tilt { height: 14%; backdrop-filter: blur(1.4px); -webkit-backdrop-filter: blur(1.4px); }
 #tilt-top { top: 0; -webkit-mask-image: linear-gradient(to bottom, #000, transparent); mask-image: linear-gradient(to bottom, #000, transparent); }
 #tilt-bottom { bottom: 0; -webkit-mask-image: linear-gradient(to top, #000, transparent); mask-image: linear-gradient(to top, #000, transparent); }
 

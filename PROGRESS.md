@@ -40,7 +40,8 @@ Status of what's shipped + ideas backlog. Architecture lives in `CLAUDE.md`. Des
 | Editorial day-beat header + dayBeats.json phrases (v36) | ✅ | ✅ 20 lines | ❌ not yet |
 | Cinematic travel overlay — ~5s train video on every trip (v37) | ✅ | ✅ 1 clip (travel.MP4) | ❌ not yet |
 | Go-home end-of-day gate — must travel home before the day ends (v37) | ✅ | ✅ | ❌ not yet |
-| **Walking prototype "One Morning" (`walk/`) — Kunitachi map, tap-to-walk, readable signs, word-locked choices, Hiro + neighbor schedules** | ✅ prototype | ⚠️ placeholder art | ❌ not yet |
+| **Walking prototype "One Morning" (`walk/`) — Kunitachi map, tap-to-walk, readable signs, word-locked choices, Hiro + neighbor schedules** | ✅ prototype | ✅ Blender-rendered art (v2) | ⚠️ v1 played ("ok, right call") |
+| Walk art pipeline (`walk/art/`) — Blender town/apartment/characters → depth-sorted sprites, fade-behind, tilt-shift | ✅ | ⚠️ first pass | ❌ not yet |
 
 ---
 
@@ -50,6 +51,7 @@ Status of what's shipped + ideas backlog. Architecture lives in `CLAUDE.md`. Des
 - **Touch targets** — ✅ done in v36 (⚙ gear + ✕ settings-close are now 44px). Re-audit any remaining small hit areas on iPhone.
 - **Faith balance** — faith regen feels fast enough that costs are trivial; consider raising costs or slowing regen
 - **Payday countdown** — no way to know when support arrives; add "Support in X days" somewhere
+- **Walk prototype art polish** — Hiro reads as standing behind the bench rather than sitting on it; Daigaku-dōri is wide and empty (cars? more cyclists?); station facade a bit dark at the top of the screen; character hair reads as a helmet. Re-render after tweaks (see `docs/files.md` → walk/art).
 - **Travel popup skip/off toggle** — v37 ships the ~5s travel video as always-full / not-skippable. Add a Settings toggle (and/or tap-to-skip) once it's been played enough to know the right default. More travel clips can be added to `TRAVEL_VIDEOS` in `js/ui.js` for variety.
 
 ---

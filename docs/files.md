@@ -7,7 +7,7 @@ walk/js/main.js       — boot, render loop, tap-to-walk input, camera, pathing,
 walk/js/state.js      — prototype state (clock, known words, items, flags) + TILE/NOON/MIN_PER_TILE constants
 walk/js/maps.js       — town (Kunitachi sketch) + apartment maps, blocked(), findPath() BFS, npcPresent()
 walk/js/render.js     — draws the pre-rendered art: ground bands, depth-sorted sprites + people, fade-when-behind, power lines, sign plaques (text is always game-drawn), tap marker, petals
-walk/art/             — the art pipeline (Blender 4.2, run headless). Re-run it whenever maps.js changes:
+walk/art/             — the art pipeline (Blender 4.2, run headless; in a cloud session download it from download.blender.org/release/Blender4.2/ into /home/user/tools — CPU renders take ~25 min for the town, ~2 min for the apartment, ~3 min for characters). Re-run it whenever maps.js changes:
                           node walk/art/export_maps.mjs
                           blender -b --python walk/art/build_scene.py -- town <tmp>      (then apartment)
                           python3 walk/art/split_layers.py <tmp> walk/assets/town

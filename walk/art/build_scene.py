@@ -126,7 +126,7 @@ M = {
     'd': mat('dirt', (0.45, 0.35, 0.22), 0.95, noise={'c2': (0.52, 0.42, 0.28), 'scale': 6}),
     'h': mat('grass_under_hedge', (0.16, 0.30, 0.08), 0.95),
     'n': mat('grass_fence', (0.20, 0.38, 0.09), 0.95, noise={'c2': (0.33, 0.48, 0.12), 'scale': 2.5}),
-    't': mat('tatami', (0.55, 0.52, 0.28), 0.8, wave={'c2': (0.62, 0.58, 0.33), 'scale': 30, 'distortion': 0, 'dir': 'Y'}),
+    't': mat('tatami', (0.58, 0.55, 0.30), 0.8, wave={'c2': (0.66, 0.62, 0.36), 'scale': 90, 'distortion': 0, 'dir': 'Y'}, bump=0.3),
     'f': mat('woodfloor', (0.36, 0.22, 0.12), 0.5, wave={'c2': (0.44, 0.29, 0.16), 'scale': 3, 'distortion': 3, 'dir': 'X'}),
     'k': mat('genkan', (0.32, 0.32, 0.31), 0.9, noise={'c2': (0.38, 0.38, 0.36), 'scale': 10}),
     'w': mat('plaster_floor', (0.4, 0.37, 0.32), 0.9),
@@ -671,6 +671,16 @@ def build_decor(t, n, x0, x1, ys, yn):
         box(n + '_body', cx - 0.25, cy - 0.2, 0, cx + 0.25, cy + 0.2, 1.25, RED, bevel=0.05)
         box(n + '_top', cx - 0.28, cy - 0.23, 1.25, cx + 0.28, cy + 0.23, 1.33, RED, bevel=0.03)
         box(n + '_slot', cx - 0.15, cy - 0.21, 1.0, cx + 0.15, cy - 0.2, 1.06, DARK_METAL)
+    elif ty == 'suitcase':
+        box(n + '_case', cx - 0.32, cy - 0.2, 0, cx + 0.32, cy + 0.2, 0.75, mat('suitcase', (0.12, 0.28, 0.42), 0.4), bevel=0.05)
+        box(n + '_handle', cx - 0.1, cy - 0.04, 0.75, cx + 0.1, cy + 0.04, 0.85, DARK_METAL)
+    elif ty == 'boxes':
+        cardboard = mat('cardboard', (0.55, 0.40, 0.24), 0.9)
+        box(n + '_b1', cx - 0.4, cy - 0.35, 0, cx + 0.35, cy + 0.35, 0.55, cardboard)
+        box(n + '_b2', cx - 0.3, cy - 0.25, 0.55, cx + 0.25, cy + 0.25, 0.95, cardboard)
+        box(n + '_tape', cx - 0.03, cy - 0.26, 0.95, cx + 0.03, cy + 0.26, 0.955, mat('tape', (0.8, 0.75, 0.6), 0.4))
+    elif ty == 'zabuton':
+        box(n, cx - 0.35, cy - 0.35, 0, cx + 0.35, cy + 0.35, 0.1, mat('zabuton', (0.55, 0.18, 0.20), 0.9), bevel=0.05)
     elif ty == 'plant':
         cyl(n + '_pot', cx, cy, 0, 0.4, 0.22, mat('pot', (0.45, 0.22, 0.12), 0.8), n=12)
         for j in range(4):
@@ -700,24 +710,31 @@ def build_wires():
                 ob.pass_index = OVERHEAD
 
 def build_interior_walls():
-    """Apartment: tall north/side walls, a cut-away south wall."""
-    wm = mat('plaster', (0.86, 0.83, 0.76), 0.9)
-    trim = WOOD_DARK
-    g = MAP['ground']
-    for my in range(H):
-        for mx in range(W):
-            if g[my][mx] != 'w':
-                continue
-            south = my == H - 1
-            hz = 0.35 if south else 2.4
-            new_sprite(my)
-            box('wall', mx, by(my + 1), 0, mx + 1, by(my), hz, wm)
-            if not south and my == 0 and 1 <= mx <= W - 2:
-                box('trim', mx, by(my + 1) - 0.02, 0, mx + 1, by(my + 1), 0.12, trim)
-    # window on the north wall with morning light
+    """Apartment as a cut-away model: tall north/side walls, a low south wall,
+    dark caps where the walls are 'cut', tatami with cloth borders."""
+    wm = mat('plaster', (0.80, 0.76, 0.68), 0.9, noise={'c2': (0.74, 0.70, 0.62), 'scale': 6})
+    cap = mat('wall_cap', (0.16, 0.11, 0.08), 0.6)
+    walls = [  # x0, y0, x1, y1 (map tiles), height
+        (0, 0, W, 1, 2.4), (0, 1, 1, H - 1, 2.4), (W - 1, 1, W, H - 1, 2.4), (0, H - 1, W, H, 0.35)]
+    for x0, y0, x1, y1, hz in walls:
+        new_sprite(y1 - 1)
+        box('wall', x0, by(y1), 0, x1, by(y0), hz, wm)
+        box('cap', x0, by(y1), hz, x1, by(y0), hz + 0.05, cap)
     new_sprite(0)
-    window('north_window', 3.1, by(1) + 0.0, 0.9, 2.8, 1.1, lit=True)
+    box('trim', 1, by(1) - 0.02, 0, W - 1, by(1), 0.12, WOOD_DARK)
+    window('north_window', 3.1, by(1), 0.9, 2.8, 1.1, lit=True)
     box('shoji_rail', 3.0, by(1) - 0.04, 2.05, 6.0, by(1), 2.12, WOOD)
+    # tatami borders (heri): mats are 2×1 tiles, rows offset like real layouts
+    heri = mat('heri', (0.10, 0.18, 0.12), 0.7)
+    g = MAP['ground']
+    tat = [(mx, my) for my in range(H) for mx in range(W) if g[my][mx] == 't']
+    xs = sorted({mx for mx, _ in tat}); ys = sorted({my for _, my in tat})
+    tx0, tx1, ty0, ty1 = xs[0], xs[-1] + 1, ys[0], ys[-1] + 1
+    for my in range(ty0, ty1 + 1):
+        box('heri', tx0, by(my) - 0.03, 0.0, tx1, by(my) + 0.03, 0.012, heri, ground=True)
+    for my in range(ty0, ty1):
+        for mx in range(tx0 + (my % 2), tx1 + 1, 2):
+            box('heri', mx - 0.03, by(my + 1), 0.0, mx + 0.03, by(my), 0.012, heri, ground=True)
 
 # ── Build ───────────────────────────────────────────────────────────────────
 build_ground()
@@ -738,7 +755,7 @@ build_wires()
 # ── Light, world, camera ────────────────────────────────────────────────────
 sun = bpy.data.objects.new('sun', bpy.data.lights.new('sun', 'SUN'))
 COL.objects.link(sun)
-sun.data.energy = 4.2 if MAP_ID == 'town' else 2.2
+sun.data.energy = 4.2 if MAP_ID == 'town' else 1.4
 sun.data.angle = math.radians(2.5)
 sun.data.color = (1.0, 0.90, 0.78)
 # morning sun low in the south-east, so shadows fall north-west and are visible
@@ -760,7 +777,7 @@ if MAP_ID == 'apartment':
     # soft fill from the window + room bounce
     area = bpy.data.objects.new('fill', bpy.data.lights.new('fill', 'AREA'))
     COL.objects.link(area)
-    area.data.energy = 220
+    area.data.energy = 110
     area.data.size = 6
     area.data.color = (1.0, 0.93, 0.82)
     area.location = (4.5, by(4.5), 4.0)

@@ -35,12 +35,15 @@ def grade(rgb):
 
 
 ground = grade(Image.open(os.path.join(SRC, 'ground.png')).convert('RGB'))
-# Above row 0 there is no map, only headroom for tall roofs. Mirror the first
-# rows of the map up into it so the camera never shows a black band.
+# Above row 0 there is no map, only headroom for tall roofs. Outdoors, mirror
+# the first rows of the map up into it so the camera never shows a black band;
+# indoors, it's the dark around the cut-away room.
 margin = int(meta['top'] * 32 * meta['scale'])
-if margin:
+if margin and meta['map'] == 'town':
     strip = ground.crop((0, margin, ground.width, margin * 2)).transpose(Image.FLIP_TOP_BOTTOM)
     ground.paste(strip, (0, 0))
+elif margin:
+    ground.paste((42, 35, 32), (0, 0, ground.width, margin))
 objects = Image.open(os.path.join(SRC, 'objects.png')).convert('RGBA')
 alpha = objects.getchannel('A')
 objects = grade(objects.convert('RGB'))
