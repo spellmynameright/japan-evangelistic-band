@@ -35,6 +35,12 @@ def grade(rgb):
 
 
 ground = grade(Image.open(os.path.join(SRC, 'ground.png')).convert('RGB'))
+# Above row 0 there is no map, only headroom for tall roofs. Mirror the first
+# rows of the map up into it so the camera never shows a black band.
+margin = int(meta['top'] * 32 * meta['scale'])
+if margin:
+    strip = ground.crop((0, margin, ground.width, margin * 2)).transpose(Image.FLIP_TOP_BOTTOM)
+    ground.paste(strip, (0, 0))
 objects = Image.open(os.path.join(SRC, 'objects.png')).convert('RGBA')
 alpha = objects.getchannel('A')
 objects = grade(objects.convert('RGB'))
@@ -69,18 +75,24 @@ for sid in np.unique(ids):
     crop[:, :, 3] = np.where(mask[y0:y1, x0:x1], crop[:, :, 3], 0)
     if crop[:, :, 3].max() == 0:
         continue
-    sprites.append({'id': int(sid), 'img': Image.fromarray(crop), 'dx': int(x0), 'dy': int(y0),
-                    'z': 'overhead' if sid == OVERHEAD else rows.get(int(sid), 0)})
+    # Any id Blender didn't hand out is the power lines (their large id doesn't
+    # survive the 8-bit index pass intact).
+    overhead = sid == OVERHEAD or int(sid) not in rows
+    sprites.append({'id': OVERHEAD if overhead else int(sid), 'img': Image.fromarray(crop), 'dx': int(x0), 'dy': int(y0),
+                    'z': 'overhead' if overhead else rows[int(sid)]})
 
-# Shelf-pack into atlases, tallest first.
+# Shelf-pack into atlases, tallest first. Anything wider than an atlas (the
+# power lines) gets a sheet of its own.
 sprites.sort(key=lambda s: -s['img'].height)
-atlases, placed = [], []
+atlases = []
+for s in [s for s in sprites if s['img'].width > ATLAS_W]:
+    s['a'], s['sx'], s['sy'] = len(atlases), 0, 0
+    atlases.append([s])
+sprites = [s for s in sprites if s['img'].width <= ATLAS_W]
 x = y = shelf = 0
 cur = []
 for s in sprites:
     w, h = s['img'].size
-    if w > ATLAS_W:
-        raise SystemExit(f"sprite {s['id']} is wider than the atlas ({w}px)")
     if x + w > ATLAS_W:
         x, y, shelf = 0, y + shelf + 2, 0
     if y + h > 4096:
@@ -100,7 +112,7 @@ for i in range(0, ground.height, BAND_H):
     out['ground'].append({'src': name, 'y': i})
 for ai, group in enumerate(atlases):
     hgt = max(s['sy'] + s['img'].height for s in group)
-    atlas = Image.new('RGBA', (ATLAS_W, hgt), (0, 0, 0, 0))
+    atlas = Image.new('RGBA', (max(ATLAS_W, max(s['img'].width for s in group)), hgt), (0, 0, 0, 0))
     for s in group:
         atlas.paste(s['img'], (s['sx'], s['sy']))
         out['sprites'].append({k: s[k] for k in ('id', 'z', 'a', 'sx', 'sy', 'dx', 'dy')} | {'w': s['img'].width, 'h': s['img'].height})
