@@ -32,6 +32,17 @@ html, body {
 
 #world { position: fixed; inset: 0; display: block; touch-action: none; }
 
+#light, .tilt { position: fixed; left: 0; right: 0; pointer-events: none; }
+#light {
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 85% 0%, rgba(255, 214, 160, 0.20), transparent 60%),
+    radial-gradient(140% 100% at 50% 50%, transparent 55%, rgba(20, 16, 40, 0.28));
+}
+.tilt { height: 18%; backdrop-filter: blur(2.2px); -webkit-backdrop-filter: blur(2.2px); }
+#tilt-top { top: 0; -webkit-mask-image: linear-gradient(to bottom, #000, transparent); mask-image: linear-gradient(to bottom, #000, transparent); }
+#tilt-bottom { bottom: 0; -webkit-mask-image: linear-gradient(to top, #000, transparent); mask-image: linear-gradient(to top, #000, transparent); }
+
 .hidden { display: none !important; }
 
 /* ── HUD ─────────────────────────────────────────────── */
@@ -206,6 +217,7 @@ ruby.w.known rt { font: 700 10px var(--ui); color: var(--gloss); letter-spacing:
 .title-en { font: 700 20px "Zen Old Mincho", serif; }
 .overlay-card p { font-size: 15px; line-height: 1.6; }
 .dim { color: var(--card-muted); }
+.primary:disabled { opacity: 0.6; }
 .primary {
   margin-top: 6px; min-height: 50px; border: none; border-radius: 14px;
   background: var(--sakura); color: #fff; font: 700 16px var(--ui); cursor: pointer;

@@ -6,7 +6,21 @@ walk/walk.css         — prototype styles (light card UI over the canvas)
 walk/js/main.js       — boot, render loop, tap-to-walk input, camera, pathing, interactions, NPC schedule watch
 walk/js/state.js      — prototype state (clock, known words, items, flags) + TILE/NOON/MIN_PER_TILE constants
 walk/js/maps.js       — town (Kunitachi sketch) + apartment maps, blocked(), findPath() BFS, npcPresent()
-walk/js/render.js     — placeholder art drawn in code (tiles, buildings, trees, people, signs, petals)
+walk/js/render.js     — draws the pre-rendered art: ground bands, depth-sorted sprites + people, fade-when-behind, power lines, sign plaques (text is always game-drawn), tap marker, petals
+walk/art/             — the art pipeline (Blender 4.2, run headless). Re-run it whenever maps.js changes:
+                          node walk/art/export_maps.mjs
+                          blender -b --python walk/art/build_scene.py -- town <tmp>      (then apartment)
+                          python3 walk/art/split_layers.py <tmp> walk/assets/town
+                          blender -b --python walk/art/build_characters.py -- <tmp_chars>
+                          python3 walk/art/pack_characters.py <tmp_chars> walk/assets/characters
+walk/art/export_maps.mjs     — writes art/maps.json from js/maps.js so Blender builds the exact walkable map
+walk/art/maps.json           — generated; don't edit
+walk/art/build_scene.py      — builds a map in 3D (houses, station, trees, poles…) and renders ground / objects / object-id passes
+walk/art/split_layers.py     — cuts the renders into ground bands + per-object sprite atlases + art.json; colour grade lives here
+walk/art/build_characters.py — chibi characters (player walk cycle ×4 directions, old man + pigeons, neighbor sweeping, cyclist)
+walk/art/pack_characters.py  — packs character frames into characters.webp + characters.json
+walk/assets/<map>/    — generated art for each map (ground-N.webp, sprites-N.webp, art.json)
+walk/assets/characters/ — generated character sheet
 walk/js/talk.js       — conversation/object scripts (node format documented at top), sign cards, word-locked choices
 walk/js/words.js      — vocabulary (WORDS), START_WORDS, "{id}" markup parse()/wordsIn()/plain()
 walk/js/hud.js        — clock/place HUD, toasts, notebook sheet, fade, noon summary
