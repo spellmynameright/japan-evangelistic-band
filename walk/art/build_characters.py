@@ -1,7 +1,7 @@
 """Render the walk/ characters as sprite frames, matching build_scene.py's
 camera (straight down, height sheared north by K), lighting and outlines.
 
-    blender -b --python walk/art/build_characters.py -- <out_dir>
+    blender -b --python walk/art/build_characters.py -- <out_dir> [quick]
 
 Writes one PNG per frame plus frames.json; pack_characters.py turns them into
 a sheet. Every frame shares one cell size and one anchor (the feet).
@@ -9,7 +9,9 @@ a sheet. Every frame shares one cell size and one anchor (the feet).
 import bpy, bmesh, json, math, os, sys
 from mathutils import Vector
 
-OUT = sys.argv[sys.argv.index('--') + 1]
+ARGS = sys.argv[sys.argv.index('--') + 1:]
+OUT = ARGS[0]
+QUICK = 'quick' in ARGS       # low samples, for checking poses
 os.makedirs(OUT, exist_ok=True)
 K = 0.85
 PX = 64                      # rendered px per unit (2x the game's 32)
@@ -147,17 +149,18 @@ def person(look, phase=0.0, walking=False, sit=False, arms=None, cap=False, bun=
         limb('arm', (side * 0.19, 0, sh_z), hand, 0.055, 0.05, L['top'])
         blob('hand', hand, 0.05, L['skin'], subdiv=2)
     hz = bz + 0.62
+    # The camera looks down from above, so faces sit high and forward on the head.
     blob('head', (0, 0, hz), 0.25, L['skin'])
-    blob('hair', (0, 0.04, hz + 0.06), 0.26, L['hair'], scale=(1.0, 1.0, 0.85))
-    blob('fringe', (0, -0.14, hz + 0.13), 0.16, L['hair'], scale=(1.3, 0.6, 0.6))
+    blob('hair', (0, 0.1, hz + 0.05), 0.255, L['hair'], scale=(1.02, 0.95, 0.9))
+    blob('fringe', (0, -0.08, hz + 0.19), 0.15, L['hair'], scale=(1.4, 0.7, 0.45))
     if bun:
         blob('bun', (0, 0.12, hz + 0.24), 0.1, L['hair'])
     if cap:
         blob('cap', (0, 0.0, hz + 0.14), 0.25, L['cap'], scale=(1.05, 1.05, 0.45))
         blob('brim', (0, -0.18, hz + 0.1), 0.14, L['cap'], scale=(1.3, 0.8, 0.25))
     for side in (-1, 1):
-        blob('eye', (side * 0.085, -0.225, hz - 0.01), 0.032, EYE, scale=(0.8, 0.5, 1.2), subdiv=2)
-        blob('cheek', (side * 0.14, -0.2, hz - 0.08), 0.035, CHEEK, scale=(1, 0.4, 0.6), subdiv=2)
+        blob('eye', (side * 0.09, -0.19, hz + 0.08), 0.04, EYE, scale=(0.8, 0.6, 1.25), subdiv=2)
+        blob('cheek', (side * 0.15, -0.19, hz + 0.0), 0.04, CHEEK, scale=(1, 0.5, 0.6), subdiv=2)
 
 def broom(angle):
     top = (0.1 + 0.25 * math.sin(angle), -0.25, 0.95)
@@ -211,7 +214,7 @@ cam_data.ortho_scale = CELL_X[1] - CELL_X[0]
 cam.location = ((CELL_X[0] + CELL_X[1]) / 2, (CELL_Y[0] + CELL_Y[1]) / 2, 20)
 
 r = scene.render
-r.engine = 'CYCLES'; scene.cycles.device = 'CPU'; scene.cycles.samples = 48; scene.cycles.use_denoising = True
+r.engine = 'CYCLES'; scene.cycles.device = 'CPU'; scene.cycles.samples = 4 if QUICK else 48; scene.cycles.use_denoising = not QUICK
 r.resolution_x = int((CELL_X[1] - CELL_X[0]) * PX); r.resolution_y = int((CELL_Y[1] - CELL_Y[0]) * PX)
 r.film_transparent = True
 r.image_settings.file_format = 'PNG'; r.image_settings.color_mode = 'RGBA'
